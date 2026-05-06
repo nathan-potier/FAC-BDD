@@ -100,7 +100,6 @@ GROUP BY d.id_defi, d.titre;
 
 -- 10. Condition de totalité avec SOUS-REQUÊTES CORRÉLÉES (Division relationnelle)
 -- Objectif : Trouver les utilisateurs qui ont débloqué TOUS les badges existants.
--- Logique : Il n'existe aucun badge pour lequel il n'existe pas de déblocage par cet utilisateur.
 
 SELECT u.pseudo 
 FROM UTILISATEUR u 
@@ -128,7 +127,6 @@ HAVING COUNT(DISTINCT d.id_badge) = (SELECT COUNT(*) FROM BADGE);
 
 
 -- 12 & 13. Jeu sur les valeurs NULL
--- Le sujet demande deux requêtes donnant des résultats différents à cause des NULLs.
 -- L'attribut 'temperature' de SEANCE est optionnel (peut être NULL).
 -- 
 -- Requête 12 : Compte absolument toutes les séances.
