@@ -18,7 +18,7 @@ JOIN HASHTAG h ON td.id_hashtag = h.id_hashtag;
 SELECT s1.id_suiveur AS utilisateur_A, s1.id_suivi AS utilisateur_B
 FROM SUIVRE s1
 JOIN SUIVRE s2 ON s1.id_suiveur = s2.id_suivi AND s1.id_suivi = s2.id_suiveur
-WHERE s1.id_suiveur < s1.id_suivi; -- Évite les doublons (A-B et B-A)
+WHERE s1.id_suiveur < s1.id_suivi;
 
 
 -- 3. Sous-requête dans le WHERE
@@ -88,14 +88,26 @@ FROM (
 ) AS records_utilisateurs;
 
 
--- 9. Jointure externe (LEFT JOIN)
+-- 9. UNION
 -- Objectif : Lister TOUS les défis (même ceux sans invitations) et compter le nombre 
 -- d'invitations envoyées pour chacun.
 
+-- Partie 1 : Les défis AVEC des invitations
 SELECT d.titre, COUNT(i.id_invite) AS nombre_invitations
 FROM DEFI d
-LEFT JOIN INVITER i ON d.id_defi = i.id_defi
-GROUP BY d.id_defi, d.titre;
+JOIN INVITER i ON d.id_defi = i.id_defi
+GROUP BY d.id_defi, d.titre
+
+UNION
+
+-- Partie 2 : Les défis SANS invitations
+SELECT d.titre, 0 AS nombre_invitations
+FROM DEFI d
+WHERE NOT EXISTS (
+    SELECT 1 
+    FROM INVITER i 
+    WHERE i.id_defi = d.id_defi
+);
 
 
 -- 10. Condition de totalité avec SOUS-REQUÊTES CORRÉLÉES (Division relationnelle)
