@@ -32,7 +32,7 @@ for i in range(1, NUM_UTILISATEURS + 1):
         pseudo = fake.user_name() + str(random.randint(1, 999))
     pseudos_utilises.add(pseudo)
     
-    profil = random.choice(['public', 'buddies_masque'])
+    profil = random.choice(['public', 'buddies', 'masque'])
     points = random.randint(0, 5000)
     utilisateurs.append([i, pseudo, profil, points])
 
