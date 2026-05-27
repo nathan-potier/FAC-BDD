@@ -88,26 +88,14 @@ FROM (
 ) AS records_utilisateurs;
 
 
--- 9. UNION
--- Objectif : Lister TOUS les défis (même ceux sans invitations) et compter le nombre 
+ -- 9. Jointure externe (LEFT JOIN)
+-- Objectif : Lister TOUS les défis (même ceux sans invitations) et compter le nombre
 -- d'invitations envoyées pour chacun.
 
--- Partie 1 : Les défis AVEC des invitations
 SELECT d.titre, COUNT(i.id_invite) AS nombre_invitations
 FROM DEFI d
-JOIN INVITER i ON d.id_defi = i.id_defi
-GROUP BY d.id_defi, d.titre
-
-UNION
-
--- Partie 2 : Les défis SANS invitations
-SELECT d.titre, 0 AS nombre_invitations
-FROM DEFI d
-WHERE NOT EXISTS (
-    SELECT 1 
-    FROM INVITER i 
-    WHERE i.id_defi = d.id_defi
-);
+LEFT JOIN INVITER i ON d.id_defi = i.id_defi
+GROUP BY d.id_defi, d.titre; 
 
 
 -- 10. Condition de totalité avec SOUS-REQUÊTES CORRÉLÉES (Division relationnelle)
@@ -138,23 +126,16 @@ GROUP BY u.id_utilisateur, u.pseudo
 HAVING COUNT(DISTINCT d.id_badge) = (SELECT COUNT(*) FROM BADGE);
 
 
--- 12 & 13. Jeu sur les valeurs NULL
+-- 12 & 13. Jeu sur les valeurs NULL:
 -- L'attribut 'temperature' de SEANCE est optionnel (peut être NULL).
--- 
 -- Requête 12 : Compte absolument toutes les séances.
 
 SELECT COUNT(*) AS total_seances FROM SEANCE;
 
 
 -- Requête 13 : Compte uniquement les séances où la température a été renseignée.
--- (Le résultat sera inférieur si des NULLs sont présents).
 
 SELECT COUNT(temperature) AS seances_avec_temperature FROM SEANCE;
-
--- MODIFICATION POUR LES RENDRE ÉGALES : 
--- On force une valeur par défaut avec COALESCE si c'est NULL.
--- SELECT COUNT(COALESCE(temperature, 0)) FROM SEANCE;
-
 
 -- 14. Requête Récursive
 -- Objectif : Trouver le plus court chemin social (degré de séparation) 
