@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS UTILISATEUR, BADGE, HASHTAG, CATEGORIE_SPORTIVE CASCADE;
 CREATE TABLE UTILISATEUR (
     id_utilisateur SERIAL PRIMARY KEY,
     pseudo VARCHAR(50) UNIQUE NOT NULL,
-    profil_visibilite VARCHAR(20) DEFAULT 'public' CHECK (profil_visibilite IN ('public', 'buddies', 'masque'))
+    profil_visibilite VARCHAR(20) DEFAULT 'public' CHECK (profil_visibilite IN ('public', 'buddies', 'masque')),
     points_engagement INTEGER DEFAULT 0 CHECK (points_engagement >= 0)
 );
 
